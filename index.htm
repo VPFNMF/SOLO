@@ -315,70 +315,71 @@ body{
   display:flex; align-items:center;
   width:100%;
   margin:7px 0;
-  padding:12px 14px;
-  border-radius:16px;
+  padding:14px 18px;
+  border-radius:20px;
   text-decoration:none; color:#fff;
-  font-size:14.5px;
+  font-size:15px;
   font-weight:700;
-  background:rgba(255,255,255,.02);
-  border:1px solid rgba(255,255,255,.05);
+  background: rgba(255, 255, 255, 0.015);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border:1px solid rgba(255,255,255,.06);
   position:relative; overflow:hidden;
   opacity:0;
-  transition: background .25s, border-color .25s, box-shadow .25s, transform .15s;
+  transition: all .3s cubic-bezier(.25,1,.5,1);
   cursor:pointer;
 }
 .link-icon{
-  width:36px; height:36px; border-radius:12px;
+  width:38px; height:38px; border-radius:14px;
   display:flex; align-items:center; justify-content:center;
-  flex-shrink:0; margin-right:12px; font-size:15px;
-  transition: transform .15s;
+  flex-shrink:0; margin-right:14px; font-size:16px;
+  transition: transform .2s;
 }
 .link-btn:active .link-icon { transform:scale(.85); }
 .link-label{ flex:1; text-align: left; }
-.link-meta{ font-size:10px; color:rgba(255,255,255,.35); margin-top:1px; }
-.link-arrow{ font-size:11px; color:rgba(255,255,255,.25); transition:.2s; flex-shrink:0; }
-.link-btn:hover .link-arrow, .link-btn:active .link-arrow{ color:rgba(255,255,255,.6); transform:translateX(3px); }
+.link-meta{ font-size:10.5px; color:rgba(255,255,255,.35); margin-top:2px; }
+.link-arrow{ font-size:12px; color:rgba(255,255,255,.25); transition:.3s; flex-shrink:0; }
+.link-btn:hover .link-arrow, .link-btn:active .link-arrow{ color:rgba(255,255,255,.7); transform:translateX(4px); }
 
 /* خط نيون من تحت */
 .link-btn::after {
-  content: ""; position: absolute; bottom: 0; left: 10%; width: 80%; height: 2px; opacity: 0.4; transition: 0.3s;
+  content: ""; position: absolute; bottom: 0; left: 10%; width: 80%; height: 2px; opacity: 0; transition: 0.3s cubic-bezier(.25,1,.5,1);
 }
 
 /* shine sweep */
 .link-btn::before{
   content:""; position:absolute;
   top:0; left:-100%; width:55%; height:100%;
-  background:linear-gradient(120deg,transparent,rgba(255,255,255,.05),transparent);
-  transform:skewX(-20deg); transition:.5s;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.08),transparent);
+  transform:skewX(-20deg); transition:.6s;
 }
 .link-btn:hover::before, .link-btn:active::before{ left:160%; }
-.link-btn:active{ transform:scale(.98) !important; }
+.link-btn:active{ transform:scale(.97) !important; }
 
-/* المنصات والـ Glow */
+/* المنصات والـ Glow المحسن */
 .tt .link-icon{ background:rgba(37,244,238,.1); color:#25F4EE; }
-.tt::after { background: #25F4EE; box-shadow: 0 0 8px #25F4EE; }
-.tt:hover, .tt:active { background:rgba(37,244,238,.06); border-color:#25F4EE; box-shadow: 0 0 15px rgba(37,244,238,0.35); transform:translateY(-1.5px); }
+.tt::after { background: #25F4EE; box-shadow: 0 0 10px #25F4EE; }
+.tt:hover, .tt:active { background:rgba(37,244,238,.04); border-color:rgba(37,244,238,.6); box-shadow: 0 10px 25px rgba(37,244,238,0.25); transform:translateY(-3px); }
 .tt:hover::after, .tt:active::after { opacity: 1; width: 100%; left: 0; }
 
 .wa .link-icon{ background:rgba(37,211,102,.1); color:#25D366; }
-.wa::after { background: #25D366; box-shadow: 0 0 8px #25D366; }
-.wa:hover, .wa:active { background:rgba(37,211,102,.06); border-color:#25D366; box-shadow: 0 0 15px rgba(37,211,102,0.35); transform:translateY(-1.5px); }
+.wa::after { background: #25D366; box-shadow: 0 0 10px #25D366; }
+.wa:hover, .wa:active { background:rgba(37,211,102,.04); border-color:rgba(37,211,102,.6); box-shadow: 0 10px 25px rgba(37,211,102,0.25); transform:translateY(-3px); }
 .wa:hover::after, .wa:active::after { opacity: 1; width: 100%; left: 0; }
 
-.kk .link-icon{ background:rgba(83,252,31,.1); }
-.kk .link-icon img{ width:18px; height:18px; border-radius:5px; }
-.kk::after { background: #53fc1f; box-shadow: 0 0 8px #53fc1f; }
-.kk:hover, .kk:active { background:rgba(83,252,31,.06); border-color:#53fc1f; box-shadow: 0 0 15px rgba(83,252,31,0.35); transform:translateY(-1.5px); }
+.kk .link-icon{ background:rgba(83,252,31,.1); color:#53fc1f; }
+.kk::after { background: #53fc1f; box-shadow: 0 0 10px #53fc1f; }
+.kk:hover, .kk:active { background:rgba(83,252,31,.04); border-color:rgba(83,252,31,.6); box-shadow: 0 10px 25px rgba(83,252,31,0.25); transform:translateY(-3px); }
 .kk:hover::after, .kk:active::after { opacity: 1; width: 100%; left: 0; }
 
 .dc .link-icon{ background:rgba(114,137,218,.1); color:#7289DA; }
-.dc::after { background: #7289DA; box-shadow: 0 0 8px #7289DA; }
-.dc:hover, .dc:active { background:rgba(114,137,218,.06); border-color:#7289DA; box-shadow: 0 0 15px rgba(114,137,218,0.35); transform:translateY(-1.5px); }
+.dc::after { background: #7289DA; box-shadow: 0 0 10px #7289DA; }
+.dc:hover, .dc:active { background:rgba(114,137,218,.04); border-color:rgba(114,137,218,.6); box-shadow: 0 10px 25px rgba(114,137,218,0.25); transform:translateY(-3px); }
 .dc:hover::after, .dc:active::after { opacity: 1; width: 100%; left: 0; }
 
 .dn .link-icon{ background:rgba(255,215,0,.1); color:#FFD700; }
-.dn::after { background: #FFD700; box-shadow: 0 0 8px #FFD700; }
-.dn:hover, .dn:active { background:rgba(255,215,0,.06); border-color:#FFD700; box-shadow: 0 0 15px rgba(255,215,0,0.35); transform:translateY(-1.5px); }
+.dn::after { background: #FFD700; box-shadow: 0 0 10px #FFD700; }
+.dn:hover, .dn:active { background:rgba(255,215,0,.04); border-color:rgba(255,215,0,.6); box-shadow: 0 10px 25px rgba(255,215,0,0.25); transform:translateY(-3px); }
 .dn:hover::after, .dn:active::after { opacity: 1; width: 100%; left: 0; }
 
 /* Ultra Smooth Drop-in animation */
@@ -413,6 +414,74 @@ body{
   font-size:10px; color:rgba(255,255,255,.12);
   letter-spacing:1px;
 }
+
+/* ═══════════════════════════════
+   AUDIO EQUALIZER (المؤشر النيون الحركي المطور)
+═══════════════════════════════ */
+.audio-equalizer-control {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+  background: rgba(5, 14, 9, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  padding: 10px 18px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  z-index: 999;
+  transition: all 0.3s cubic-bezier(.25,1,.5,1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+}
+.audio-equalizer-control:hover {
+  border-color: var(--g);
+  box-shadow: 0 0 18px rgba(52, 211, 153, 0.4);
+  transform: translateY(-3px);
+}
+.eq-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  width: 18px;
+  height: 14px;
+}
+.eq-bar {
+  width: 2px;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 1px;
+  transition: all 0.2s ease;
+}
+.audio-equalizer-control.playing .eq-bar {
+  background-color: var(--g);
+  box-shadow: 0 0 5px var(--g);
+  animation: bounceBars 0.8s ease-in-out infinite alternate;
+}
+.audio-equalizer-control.playing .eq-bar:nth-child(1) { animation-delay: 0.1s; animation-duration: 0.5s; }
+.audio-equalizer-control.playing .eq-bar:nth-child(2) { animation-delay: 0.3s; animation-duration: 0.7s; }
+.audio-equalizer-control.playing .eq-bar:nth-child(3) { animation-delay: 0.0s; animation-duration: 0.6s; }
+.audio-equalizer-control.playing .eq-bar:nth-child(4) { animation-delay: 0.4s; animation-duration: 0.4s; }
+
+.audio-equalizer-control span {
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 700;
+  transition: .3s;
+}
+.audio-equalizer-control.playing span {
+  color: var(--g);
+  text-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
+}
+
+@keyframes bounceBars {
+  0% { height: 3px; }
+  100% { height: 14px; }
+}
 </style>
 </head>
 <body>
@@ -421,6 +490,23 @@ body{
 <div class="aurora aurora-1"></div>
 <div class="aurora aurora-2"></div>
 <canvas id="particles"></canvas>
+
+<!-- مؤشر الصوت النيون الحركي الاحترافي بدون إيموجي -->
+<div class="audio-equalizer-control" id="audioCtrl" onclick="toggleMainAudio(event)">
+  <div class="eq-bars">
+    <div class="eq-bar"></div>
+    <div class="eq-bar"></div>
+    <div class="eq-bar"></div>
+    <div class="eq-bar"></div>
+  </div>
+  <span id="audioStatus">Muted</span>
+</div>
+
+<!-- عنصر الصوت الرئيسي -->
+<audio id="mainBackgroundAudio" loop preload="auto">
+  <source src="https://files.catbox.moe/e74glv.m4a" type="audio/x-m4a">
+  <source src="https://files.catbox.moe/e74glv.m4a" type="audio/mp4">
+</audio>
 
 <!-- ─── PROFILE PAGE ─── -->
 <div id="page-profile">
@@ -503,9 +589,7 @@ body{
   </a>
 
   <a class="link-btn kk" href="https://kick.com/solo_39" target="_blank">
-    <div class="link-icon">
-      <img src="https://play-lh.googleusercontent.com/zEMwKW77990UYUC6aJrJhJmnKdHpr_56Y4W1n7C9xrk2a2gSTT62_Lk1uaLek-cYH4UBl12pc8Au4444oYQK=w240-h480-rw" alt="Kick">
-    </div>
+    <div class="link-icon"><i class="fa-brands fa-kickstarter"></i></div>
     <div class="link-label">
       <div>Kick</div>
       <div class="link-meta">Watch live streams</div>
@@ -538,14 +622,54 @@ body{
 
 <script>
 /* ══════════════════════════
-   NATIVE PHYSICAL CLICK ENGINE (توليد كليك فيزيائي حقيقي غير قابل للحظر)
+   BACKGROUND AUDIO SYSTEM WITH EQUALIZER
+══════════════════════════ */
+const bgAudio = document.getElementById("mainBackgroundAudio");
+const audioCtrl = document.getElementById("audioCtrl");
+const audioStatus = document.getElementById("audioStatus");
+
+function triggerBackgroundAudio() {
+  if (bgAudio.paused) {
+    bgAudio.play().then(() => {
+      updateAudioUI(true);
+      document.removeEventListener('pointerdown', triggerBackgroundAudio);
+      document.removeEventListener('keydown', triggerBackgroundAudio);
+    }).catch(e => console.log("Autoplay context waiting."));
+  }
+}
+
+function toggleMainAudio(event) {
+  if(event) event.stopPropagation();
+  if (bgAudio.paused) {
+    bgAudio.play();
+    updateAudioUI(true);
+  } else {
+    bgAudio.pause();
+    updateAudioUI(false);
+  }
+}
+
+function updateAudioUI(isPlaying) {
+  if (isPlaying) {
+    audioCtrl.classList.add('playing');
+    audioStatus.innerText = "Playing";
+  } else {
+    audioCtrl.classList.remove('playing');
+    audioStatus.innerText = "Muted";
+  }
+}
+
+document.addEventListener('pointerdown', triggerBackgroundAudio);
+document.addEventListener('keydown', triggerBackgroundAudio);
+
+
+/* ══════════════════════════
+   NATIVE PHYSICAL CLICK ENGINE
 ══════════════════════════ */
 var audioCtx = null;
 
-// دالة لتصنيع صوت "تكة" ميكانيكية حقيقية فوراً
 function playMechanicalClick() {
   try {
-    // تفعيل الـ AudioContext فوراً وتجنب قيود المتصفحات الذكية
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
@@ -555,8 +679,7 @@ function playMechanicalClick() {
 
     var now = audioCtx.currentTime;
 
-    // 1. صناعة موجة الـ Noise (الاحتكاك الفيزيائي السريع للزرار الميكانيكي)
-    var bufferSize = audioCtx.sampleRate * 0.02; // مدة قصيرة جداً (20 ملي ثانية)
+    var bufferSize = audioCtx.sampleRate * 0.02;
     var buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
     var data = buffer.getChannelData(0);
     for (var i = 0; i < bufferSize; i++) {
@@ -565,7 +688,6 @@ function playMechanicalClick() {
     var noise = audioCtx.createBufferSource();
     noise.buffer = buffer;
 
-    // فلتر لتنعيم الصوت وجعله "مكتوم وواقعي" زي البلاستيك أو المعدن الحقيقي
     var filter = audioCtx.createBiquadFilter();
     filter.type = 'bandpass';
     filter.frequency.setValueAtTime(1000, now);
@@ -578,21 +700,19 @@ function playMechanicalClick() {
     filter.connect(noiseGain);
     noiseGain.connect(audioCtx.destination);
 
-    // 2. صناعة موجة الـ Snap (نقرة الزرار الحادة النظيفة)
     var osc = audioCtx.createOscillator();
     var oscGain = audioCtx.createGain();
 
     osc.type = 'triangle'; 
-    osc.frequency.setValueAtTime(800, now); // تردد نقرة فيزيائية
+    osc.frequency.setValueAtTime(800, now);
     osc.frequency.exponentialRampToValueAtTime(100, now + 0.02);
 
-    oscGain.gain.setValueAtTime(0.5, now); // صوت قوي ومسموع
+    oscGain.gain.setValueAtTime(0.5, now);
     oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
 
     osc.connect(oscGain);
     oscGain.connect(audioCtx.destination);
 
-    // تشغيل الاتنين مع بعض في نفس الفمتو ثانية للحصول على صوت حقيقي بالكامل
     noise.start(now);
     osc.start(now);
     
@@ -604,7 +724,6 @@ function playMechanicalClick() {
   }
 }
 
-// ربط تشغيل الصوت بجميع أنواع الضغطات لضمان الاستجابة الفورية
 document.addEventListener('pointerdown', function(e) {
   var btn = e.target.closest('.link-btn, .enter-btn, .back-btn');
   if (btn) {
