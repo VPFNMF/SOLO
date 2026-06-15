@@ -3,38 +3,848 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Solo</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
-*{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+<title>SOLO · Content Creator & Streamer</title>
 
-:root{
-  --g: #34D399;
+<meta name="description" content="SOLO — Content Creator & Streamer. Follow on TikTok, Kick, Discord, WhatsApp.">
+<meta property="og:title" content="SOLO · Content Creator & Streamer">
+<meta property="og:description" content="Follow SOLO on TikTok, Kick, Discord, WhatsApp.">
+<meta property="og:image" content="https://i.ibb.co/1Gtzwvph/7df55b7a-c234-4a6d-a25c-8dcdb39e067e-fullsize.webp">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#050e09">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* ══ RESET & ROOT ══ */
+*, *::before, *::after {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+:root {
+  --g:  #34D399;
   --g2: #10B981;
   --g3: #6EE7B7;
   --dark: #050e09;
+  --card-bg: rgba(255,255,255,.025);
+  --card-border: rgba(255,255,255,.07);
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration:.01ms !important; transition-duration:.01ms !important; }
 }
 
-html,body{ height:100%; overflow-x:hidden; background:#050e09; }
-
-body{
-  min-height:100vh;
-  font-family:'Segoe UI',Arial,sans-serif;
-  position:relative;
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+  background: var(--dark);
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+body {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
-/* BG Video Container with dark overlay */
-.bg{
-  position:fixed; inset:0; z-index:0;
+/* ══ BACKGROUND VIDEO ══ */
+.bg {
+  position: fixed; inset: 0; z-index: 0;
+  background: var(--dark);
   overflow: hidden;
-  background: #050e09;
 }
 .bg video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  position: absolute; top: 0; left: 0;
+}
+.bg::after {
+  content: ""; position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(180deg,
+    rgba(5,14,9,.92) 0%,
+    rgba(5,14,9,.85) 40%,
+    rgba(5,14,9,.97) 100%
+  );
+}
+
+/* ══ SKELETON LOADER ══ */
+.skeleton {
+  background: linear-gradient(90deg,
+    rgba(52,211,153,.06) 25%,
+    rgba(52,211,153,.15) 50%,
+    rgba(52,211,153,.06) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 50%;
+}
+.av-skeleton {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  z-index: 0;
+}
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+/* ══ PARTICLES CANVAS ══ */
+#particles { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+
+/* ══ AURORA BLOBS ══ */
+.aurora { position: fixed; z-index: 1; pointer-events: none; border-radius: 50%; filter: blur(80px); opacity: .15; }
+.aurora-1 { width: 320px; height: 320px; background: radial-gradient(circle, #34D399, transparent 70%); top: -60px; left: -60px; animation: float1 9s ease-in-out infinite; }
+.aurora-2 { width: 260px; height: 260px; background: radial-gradient(circle, #059669, transparent 70%); bottom: -60px; right: -60px; animation: float2 11s ease-in-out infinite; }
+@keyframes float1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(50px,25px)} }
+@keyframes float2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-35px,-25px)} }
+
+/* ══ SCROLLABLE WRAPPER ══ */
+.page-scroll {
+  position: relative; z-index: 2;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ══════════════════════════════
+   PAGE: PROFILE
+══════════════════════════════ */
+#page-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5vh 20px 24px;
   width: 100%;
-  height: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: initProfile .45s cubic-bezier(.25,1,.5,1) forwards;
+}
+@keyframes initProfile { to { opacity:1; transform:translateY(0); } }
+
+/* avatar */
+.av-wrap {
+  position: relative;
+  width: min(50vw, 170px);
+  height: min(50vw, 170px);
+  margin-bottom: 20px;
+}
+.live-ring {
+  position: absolute; inset: 0;
+  border-radius: 50%; z-index: 0;
+  animation: liveRing 2s ease-in-out infinite;
+}
+@keyframes liveRing {
+  0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.45)}
+  50%{box-shadow:0 0 0 12px rgba(52,211,153,0)}
+}
+.orbit {
+  position: absolute; inset: -16px;
+  border-radius: 50%;
+  animation: spin 6s linear infinite;
+}
+.orbit-dot {
+  position: absolute; top: 2px; left: 50%; transform: translateX(-50%);
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--g);
+  box-shadow: 0 0 10px var(--g), 0 0 22px var(--g);
+}
+.orbit-dot2 {
+  position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--g3); opacity: .55;
+}
+.orbit-ring {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(52,211,153,.14);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.arc {
+  position: absolute; inset: -9px; border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--g);
+  border-right-color: rgba(52,211,153,.3);
+  animation: spin 2.5s linear infinite;
+}
+.arc2 {
+  position: absolute; inset: -13px; border-radius: 50%;
+  border: 1px solid transparent;
+  border-bottom-color: var(--g2);
+  border-left-color: rgba(16,185,129,.2);
+  animation: spin 4s linear infinite reverse;
+}
+.av-img {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(52,211,153,.3);
+  position: relative; z-index: 1;
+  opacity: 0; transform: scale(.4);
+  animation: popIn .5s cubic-bezier(.34,1.56,.64,1) .05s both;
+  transition: opacity .3s;
+}
+.av-img.loaded { opacity: 1; }
+@keyframes popIn { to { opacity:1; transform:scale(1); } }
+
+/* live badge */
+.live-badge {
+  position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 5px;
+  background: #ef4444; color: #fff;
+  font-size: 9px; font-weight: 800; letter-spacing: 1.5px;
+  padding: 3px 10px; border-radius: 20px; z-index: 2;
+  box-shadow: 0 0 14px rgba(239,68,68,.45);
+  animation: fadeUp .4s ease .2s both;
+  opacity: 0;
+}
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: blink 1s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.15} }
+
+/* name / tag */
+.profile-name {
+  font-size: clamp(26px,7.5vw,34px);
+  font-weight: 900; color: #fff;
+  letter-spacing: 4px; text-transform: uppercase;
+  text-shadow: 0 0 40px rgba(52,211,153,.35);
+  animation: fadeUp .4s ease .1s both; opacity: 0;
+}
+.profile-tag {
+  font-size: clamp(11px,2.5vw,13px);
+  color: var(--g); letter-spacing: 2.5px;
+  text-transform: uppercase; margin-top: 5px;
+  animation: fadeUp .4s ease .15s both; opacity: 0;
+  text-align: center;
+}
+
+/* divider */
+.divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 12px 0; width: 100%; justify-content: center;
+  animation: fadeUp .4s ease .2s both; opacity: 0;
+}
+.divider-line { width: 45px; height: 1px; background: rgba(52,211,153,.22); }
+.divider-icon { color: var(--g); font-size: 11px; }
+
+/* stats */
+.stats {
+  display: flex; width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px; overflow: hidden;
+  animation: fadeUp .4s ease .25s both; opacity: 0;
+}
+.stat { padding: 12px 8px; text-align: center; flex: 1; }
+.stat + .stat { border-left: 1px solid var(--card-border); }
+.stat-n { font-size: 15px; font-weight: 800; color: #fff; }
+.stat-l { font-size: 9px; color: rgba(255,255,255,.38); letter-spacing: 1px; text-transform: uppercase; margin-top: 3px; }
+
+/* visitor counter */
+.visitors {
+  margin-top: 10px;
+  display: flex; align-items: center; gap: 7px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 30px;
+  padding: 6px 16px;
+  animation: fadeUp .4s ease .28s both; opacity: 0;
+}
+.visitors i { color: var(--g); font-size: 11px; }
+.visitors span { font-size: 11px; color: rgba(255,255,255,.45); letter-spacing: 1px; }
+.visitors strong { color: var(--g); }
+
+/* enter btn */
+.enter-btn {
+  margin-top: 20px;
+  padding: 13px 44px;
+  border-radius: 50px;
+  border: 1.5px solid var(--g);
+  background: rgba(52,211,153,.12);
+  color: #fff;
+  font-size: clamp(14px,3.8vw,15px);
+  font-weight: 700; letter-spacing: 3px;
+  cursor: pointer; overflow: hidden; position: relative;
+  animation: fadeUp .4s ease .3s both, btnGlow 2s infinite ease-in-out;
+  opacity: 0;
+  transition: .2s cubic-bezier(.25,1,.5,1);
+}
+@keyframes btnGlow {
+  0%,100%{box-shadow:0 0 8px rgba(52,211,153,.2), 0 0 0px rgba(52,211,153,0), inset 0 0 4px rgba(52,211,153,.1); border-color:rgba(52,211,153,.5)}
+  50%{box-shadow:0 0 25px rgba(52,211,153,.65), 0 0 10px rgba(52,211,153,.3), inset 0 0 12px rgba(52,211,153,.3); border-color:var(--g)}
+}
+.enter-btn::before {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 110%, rgba(52,211,153,.35), transparent 70%);
+  opacity: 0; transition: .3s;
+}
+.enter-btn:hover::before, .enter-btn:active::before { opacity: 1; }
+.enter-btn:active { transform: scale(.95); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════
+   PAGE: LINKS
+══════════════════════════════ */
+#page-links {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 3vh 16px 30px;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* back */
+.back-btn {
+  align-self: flex-start;
+  display: flex; align-items: center; gap: 6px;
+  color: rgba(255,255,255,.45);
+  font-size: 13px; letter-spacing: 1px;
+  background: none; border: none; cursor: pointer;
+  padding: 6px 0; margin-bottom: 10px;
+  transition: .2s;
+}
+.back-btn:hover { color: var(--g); }
+.back-btn i { font-size: 13px; }
+
+/* mini avatar */
+.mini-av { display: flex; flex-direction: column; align-items: center; margin-bottom: 16px; width: 100%; }
+.mini-av img {
+  width: min(32vw,130px); height: min(32vw,130px);
+  border-radius: 50%; object-fit: cover;
+  border: 3px solid rgba(52,211,153,.4);
+  box-shadow: 0 0 28px rgba(52,211,153,.2);
+}
+.mini-av-name { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: 2px; margin-top: 8px; }
+.mini-av-tag  { font-size: 11px; color: var(--g); letter-spacing: 1.5px; margin-top: 2px; }
+
+/* copy handle */
+.copy-handle {
+  display: flex; align-items: center; gap: 7px;
+  margin-top: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 30px;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: .2s;
+  position: relative;
+}
+.copy-handle:hover { border-color: rgba(52,211,153,.4); }
+.copy-handle span { font-size: 11px; color: rgba(255,255,255,.4); letter-spacing: 1px; }
+.copy-handle i { font-size: 10px; color: rgba(255,255,255,.3); transition: .2s; }
+.copy-handle:hover i { color: var(--g); }
+.copy-toast {
+  position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  background: var(--g); color: #050e09;
+  font-size: 10px; font-weight: 800; letter-spacing: 1px;
+  padding: 4px 12px; border-radius: 20px;
+  white-space: nowrap; pointer-events: none;
+  opacity: 0; transition: opacity .2s;
+}
+.copy-toast.show { opacity: 1; }
+
+/* section label */
+.section-lbl { font-size: 9px; letter-spacing: 3px; color: rgba(255,255,255,.22); text-transform: uppercase; margin-bottom: 12px; }
+
+/* ══ LINK BUTTONS WITH NEON GLOW ══ */
+.link-btn {
+  display: flex; align-items: center;
+  width: 100%; margin: 7px 0;
+  padding: 14px 18px;
+  border-radius: 20px;
+  text-decoration: none; color: #fff;
+  font-size: 15px; font-weight: 700;
+  background: rgba(255,255,255,.015);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,.06);
+  position: relative; overflow: hidden;
+  opacity: 0;
+  transition: all .3s cubic-bezier(.25,1,.5,1);
+  cursor: pointer;
+}
+.link-icon {
+  width: 38px; height: 38px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-right: 14px; font-size: 16px;
+  transition: transform .2s;
+}
+.link-btn:active .link-icon { transform: scale(.85); }
+.link-label { flex: 1; text-align: left; }
+.link-meta { font-size: 10.5px; color: rgba(255,255,255,.33); margin-top: 2px; }
+.link-arrow { font-size: 12px; color: rgba(255,255,255,.22); transition: .3s; flex-shrink: 0; }
+.link-btn:hover .link-arrow, .link-btn:active .link-arrow { color: rgba(255,255,255,.7); transform: translateX(4px); }
+
+/* neon underline */
+.link-btn::after {
+  content: ""; position: absolute;
+  bottom: 0; left: 10%; width: 80%; height: 2px;
+  opacity: 0; transition: .3s cubic-bezier(.25,1,.5,1);
+}
+/* shine sweep */
+.link-btn::before {
+  content: ""; position: absolute;
+  top: 0; left: -100%; width: 55%; height: 100%;
+  background: linear-gradient(120deg,transparent,rgba(255,255,255,.08),transparent);
+  transform: skewX(-20deg); transition: .6s;
+}
+.link-btn:hover::before, .link-btn:active::before { left: 160%; }
+.link-btn:active { transform: scale(.97) !important; }
+
+/* ══ CUSTOM PLATFORM GLOW EFFECTS ══ */
+/* TikTok */
+.tt .link-icon { background: rgba(37,244,238,.1); color: #25F4EE; }
+.tt::after { background: #25F4EE; box-shadow: 0 0 10px #25F4EE, 0 0 20px #25F4EE; }
+.tt:hover, .tt:active { 
+  background: rgba(37,244,238,.04); 
+  border-color: rgba(37,244,238,.6); 
+  box-shadow: 0 5px 20px rgba(37,244,238,.25), 0 0 35px rgba(37,244,238,.15), inset 0 0 10px rgba(37,244,238,.1); 
+  transform: translateY(-3px); 
+}
+.tt:hover::after, .tt:active::after { opacity: 1; }
+
+/* WhatsApp */
+.wa .link-icon { background: rgba(37,211,102,.1); color: #25D366; }
+.wa::after { background: #25D366; box-shadow: 0 0 10px #25D366, 0 0 20px #25D366; }
+.wa:hover, .wa:active { 
+  background: rgba(37,211,102,.04); 
+  border-color: rgba(37,211,102,.6); 
+  box-shadow: 0 5px 20px rgba(37,211,102,.25), 0 0 35px rgba(37,211,102,.15), inset 0 0 10px rgba(37,211,102,.1); 
+  transform: translateY(-3px); 
+}
+.wa:hover::after, .wa:active::after { opacity: 1; }
+
+/* Kick */
+.kk .link-icon { background: rgba(83,252,31,.1); color: #53fc1f; }
+.kk::after { background: #53fc1f; box-shadow: 0 0 10px #53fc1f, 0 0 20px #53fc1f; }
+.kk:hover, .kk:active { 
+  background: rgba(83,252,31,.04); 
+  border-color: rgba(83,252,31,.6); 
+  box-shadow: 0 5px 20px rgba(83,252,31,.25), 0 0 35px rgba(83,252,31,.15), inset 0 0 10px rgba(83,252,31,.1); 
+  transform: translateY(-3px); 
+}
+.kk:hover::after, .kk:active::after { opacity: 1; }
+
+/* Discord */
+.dc .link-icon { background: rgba(114,137,218,.1); color: #7289DA; }
+.dc::after { background: #7289DA; box-shadow: 0 0 10px #7289DA, 0 0 20px #7289DA; }
+.dc:hover, .dc:active { 
+  background: rgba(114,137,218,.04); 
+  border-color: rgba(114,137,218,.6); 
+  box-shadow: 0 5px 20px rgba(114,137,218,.25), 0 0 35px rgba(114,137,218,.15), inset 0 0 10px rgba(114,137,218,.1); 
+  transform: translateY(-3px); 
+}
+.dc:hover::after, .dc:active::after { opacity: 1; }
+
+/* InstaPay / Donate */
+.dn .link-icon { background: rgba(255,215,0,.1); color: #FFD700; }
+.dn::after { background: #FFD700; box-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700; }
+.dn:hover, .dn:active { 
+  background: rgba(255,215,0,.04); 
+  border-color: rgba(255,215,0,.6); 
+  box-shadow: 0 5px 20px rgba(255,215,0,.25), 0 0 35px rgba(255,215,0,.15), inset 0 0 10px rgba(255,215,0,.1); 
+  transform: translateY(-3px); 
+}
+.dn:hover::after, .dn:active::after { opacity: 1; }
+
+/* drop-in animations */
+@keyframes dropIn {
+  0%   { opacity: 0; transform: translateY(16px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+#page-links.active .back-btn     { animation: fadeUp .3s ease both; }
+#page-links.active .mini-av      { animation: fadeUp .3s ease .04s both; }
+#page-links.active .section-lbl  { animation: fadeUp .3s ease .08s both; }
+#page-links.active .link-btn:nth-of-type(1){ animation: dropIn .3s cubic-bezier(.25,1,.5,1) .10s both; }
+#page-links.active .link-btn:nth-of-type(2){ animation: dropIn .3s cubic-bezier(.25,1,.5,1) .13s both; }
+#page-links.active .link-btn:nth-of-type(3){ animation: dropIn .3s cubic-bezier(.25,1,.5,1) .16s both; }
+#page-links.active .link-btn:nth-of-type(4){ animation: dropIn .3s cubic-bezier(.25,1,.5,1) .19s both; }
+#page-links.active .link-btn:nth-of-type(5){ animation: dropIn .3s cubic-bezier(.25,1,.5,1) .22s both; }
+
+/* ripple */
+.ripple {
+  position: absolute; border-radius: 50%;
+  background: rgba(255,255,255,.1);
+  transform: scale(0);
+  animation: rip .4s ease-out forwards;
+  pointer-events: none;
+}
+@keyframes rip { to { transform: scale(4); opacity: 0; } }
+
+/* ══ AUDIO CONTROL ══ */
+.audio-equalizer-control {
+  position: fixed; bottom: 25px; left: 25px;
+  background: rgba(5,14,9,.6);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(52,211,153,.2);
+  padding: 10px 18px;
+  border-radius: 30px;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer; z-index: 999;
+  transition: all .3s cubic-bezier(.25,1,.5,1);
+  box-shadow: 0 10px 30px rgba(0,0,0,.7);
+}
+.audio-equalizer-control:hover { border-color: var(--g); box-shadow: 0 0 20px rgba(52,211,153,.4); transform: translateY(-3px); }
+.eq-bars { display: flex; align-items: flex-end; gap: 3px; width: 18px; height: 14px; }
+.eq-bar  { width: 2px; height: 3px; background: rgba(255,255,255,.35); border-radius: 1px; transition: all .2s; }
+.audio-equalizer-control.playing .eq-bar { background: var(--g); box-shadow: 0 0 5px var(--g); animation: bounceBars .8s ease-in-out infinite alternate; }
+.audio-equalizer-control.playing .eq-bar:nth-child(1) { animation-delay:.1s;  animation-duration:.5s; }
+.audio-equalizer-control.playing .eq-bar:nth-child(2) { animation-delay:.3s;  animation-duration:.7s; }
+.audio-equalizer-control.playing .eq-bar:nth-child(3) { animation-delay:.0s;  animation-duration:.6s; }
+.audio-equalizer-control.playing .eq-bar:nth-child(4) { animation-delay:.4s;  animation-duration:.4s; }
+.audio-equalizer-control span { font-size: 11px; color: rgba(255,255,255,.55); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; transition: .3s; }
+.audio-equalizer-control.playing span { color: var(--g); text-shadow: 0 0 8px rgba(52,211,153,.5); }
+@keyframes bounceBars { 0%{ height:3px } 100%{ height:14px } }
+
+/* ══ FOOTER ══ */
+.footer { position: relative; z-index: 2; text-align: center; padding: 14px 0 18px; font-size: 10px; color: rgba(255,255,255,.1); letter-spacing: 1px; }
+
+/* ══ SCROLL-TO-TOP ══ */
+.scroll-top {
+  position: fixed; bottom: 25px; right: 25px; z-index: 999;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(5,14,9,.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(52,211,153,.2);
+  color: var(--g); font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all .3s;
+  opacity: 0; pointer-events: none;
+}
+.scroll-top.show { opacity: 1; pointer-events: auto; }
+.scroll-top:hover { border-color: var(--g); box-shadow: 0 0 18px rgba(52,211,153,.35); transform: translateY(-3px); }
+</style>
+</head>
+<body>
+
+<div class="bg">
+  <video autoplay loop muted playsinline webkit-playsinline preload="auto">
+    <source src="https://files.catbox.moe/v3c5in.mp4" type="video/mp4">
+  </video>
+</div>
+
+<div class="aurora aurora-1"></div>
+<div class="aurora aurora-2"></div>
+<canvas id="particles"></canvas>
+
+<div class="audio-equalizer-control" id="audioCtrl" onclick="toggleMainAudio(event)">
+  <div class="eq-bars">
+    <div class="eq-bar"></div>
+    <div class="eq-bar"></div>
+    <div class="eq-bar"></div>
+    <div class="eq-bar"></div>
+  </div>
+  <span id="audioStatus">Muted</span>
+</div>
+<audio id="mainBackgroundAudio" loop preload="auto">
+  <source src="https://files.catbox.moe/e74glv.m4a" type="audio/x-m4a">
+  <source src="https://files.catbox.moe/e74glv.m4a" type="audio/mp4">
+</audio>
+
+<button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()" aria-label="Back to top">
+  <i class="fas fa-chevron-up"></i>
+</button>
+
+<div class="page-scroll" id="pageScroll">
+
+  <div id="page-profile">
+    <div class="av-wrap">
+      <div class="live-ring"></div>
+      <div class="orbit">
+        <div class="orbit-ring"></div>
+        <div class="orbit-dot"></div>
+        <div class="orbit-dot2"></div>
+      </div>
+      <div class="arc2"></div>
+      <div class="arc"></div>
+      <div class="av-skeleton skeleton"></div>
+      <img class="av-img"
+        src="https://i.ibb.co/1Gtzwvph/7df55b7a-c234-4a6d-a25c-8dcdb39e067e-fullsize.webp"
+        alt="Solo"
+        onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none'">
+    </div>
+
+    <div class="profile-name">SOLO</div>
+    <div class="profile-tag">Content Creator & Streamer</div>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <i class="fas fa-star divider-icon"></i>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-n" style="color:#53fc1f;">KICK</div>
+        <div class="stat-l">Live</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n" style="color:#25F4EE;">TikTok</div>
+        <div class="stat-l">Videos</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n" style="color:#7289DA;">Discord</div>
+        <div class="stat-l">Community</div>
+      </div>
+    </div>
+
+    <div class="visitors">
+      <i class="fas fa-eye"></i>
+      <span>Visitors today: <strong id="visitorCount">—</strong></span>
+    </div>
+
+    <button class="enter-btn" onclick="goLinks()">
+      <i class="fas fa-link" style="margin-right:8px;font-size:13px;"></i>My Links
+    </button>
+  </div>
+
+  <div id="page-links">
+    <button class="back-btn" onclick="goProfile()">
+      <i class="fas fa-chevron-left"></i> Back
+    </button>
+
+    <div class="mini-av">
+      <img src="https://i.ibb.co/1Gtzwvph/7df55b7a-c234-4a6d-a25c-8dcdb39e067e-fullsize.webp" alt="Solo">
+      <div class="mini-av-name">SOLO</div>
+      <div class="mini-av-tag">@s_adham_solo_s</div>
+      <div class="copy-handle" onclick="copyHandle()" title="Copy username">
+        <i class="fas fa-at" style="color:var(--g);font-size:10px;"></i>
+        <span>s_adham_solo_s</span>
+        <i class="fas fa-copy"></i>
+        <div class="copy-toast" id="copyToast">Copied!</div>
+      </div>
+    </div>
+
+    <div class="section-lbl">— connect with me —</div>
+
+    <a class="link-btn tt" href="https://tiktok.com/@s_adham_solo_s" target="_blank" rel="noopener">
+      <div class="link-icon"><i class="fab fa-tiktok"></i></div>
+      <div class="link-label">
+        <div>TikTok</div>
+        <div class="link-meta">@s_adham_solo_s</div>
+      </div>
+      <i class="fas fa-arrow-right link-arrow"></i>
+    </a>
+
+    <a class="link-btn wa" href="https://whatsapp.com/channel/0029Vb7axUEDzgT4EbFP4r12" target="_blank" rel="noopener">
+      <div class="link-icon"><i class="fab fa-whatsapp"></i></div>
+      <div class="link-label">
+        <div>WhatsApp Channel</div>
+        <div class="link-meta">Join the channel</div>
+      </div>
+      <i class="fas fa-arrow-right link-arrow"></i>
+    </a>
+
+    <a class="link-btn kk" href="https://kick.com/solo_39" target="_blank" rel="noopener">
+      <div class="link-icon"><i class="fa-brands fa-kickstarter"></i></div>
+      <div class="link-label">
+        <div>Kick</div>
+        <div class="link-meta">Watch live streams</div>
+      </div>
+      <i class="fas fa-arrow-right link-arrow"></i>
+    </a>
+
+    <a class="link-btn dc" href="https://discord.gg/tcuxk4Evc" target="_blank" rel="noopener">
+      <div class="link-icon"><i class="fab fa-discord"></i></div>
+      <div class="link-label">
+        <div>Discord Server</div>
+        <div class="link-meta">Join the community</div>
+      </div>
+      <i class="fas fa-arrow-right link-arrow"></i>
+    </a>
+
+    <a class="link-btn dn" href="https://ipn.eg/S/adhamsolo90/instapay/50rIUM" target="_blank" rel="noopener">
+      <div class="link-icon"><i class="fas fa-hand-holding-dollar"></i></div>
+      <div class="link-label">
+        <div>Donate</div>
+        <div class="link-meta">Support via InstaPay</div>
+      </div>
+      <i class="fas fa-arrow-right link-arrow"></i>
+    </a>
+  </div>
+
+  <div class="footer">Made with ❤️ · solo_39</div>
+</div><script>
+/* ══════════════════════════
+   VISITOR COUNTER (localStorage)
+══════════════════════════ */
+(function() {
+  var key = 'solo_visit_' + new Date().toDateString();
+  var count = parseInt(localStorage.getItem('solo_total') || '0');
+  if (!localStorage.getItem(key)) {
+    count++;
+    localStorage.setItem('solo_total', count);
+    localStorage.setItem(key, '1');
+  }
+  document.getElementById('visitorCount').textContent = count;
+})();
+
+/* ══════════════════════════
+   COPY HANDLE
+══════════════════════════ */
+function copyHandle() {
+  navigator.clipboard.writeText('@s_adham_solo_s').catch(function() {});
+  var toast = document.getElementById('copyToast');
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 1800);
+}
+
+/* ══════════════════════════
+   AUDIO
+══════════════════════════ */
+var bgAudio    = document.getElementById('mainBackgroundAudio');
+var audioCtrl  = document.getElementById('audioCtrl');
+var audioStatus= document.getElementById('audioStatus');
+
+function triggerBgAudio() {
+  if (bgAudio.paused) {
+    bgAudio.play().then(function() {
+      updateAudioUI(true);
+      document.removeEventListener('pointerdown', triggerBgAudio);
+      document.removeEventListener('keydown', triggerBgAudio);
+    }).catch(function(){});
+  }
+}
+function toggleMainAudio(e) {
+  if (e) e.stopPropagation();
+  if (bgAudio.paused) { bgAudio.play(); updateAudioUI(true); }
+  else                 { bgAudio.pause(); updateAudioUI(false); }
+}
+function updateAudioUI(playing) {
+  audioCtrl.classList.toggle('playing', playing);
+  audioStatus.innerText = playing ? 'Playing' : 'Muted';
+}
+document.addEventListener('pointerdown', triggerBgAudio);
+document.addEventListener('keydown', triggerBgAudio);
+
+/* ══════════════════════════
+   CLICK SOUND ENGINE
+══════════════════════════ */
+var audioCtx2 = null;
+function playClick() {
+  try {
+    if (!audioCtx2) audioCtx2 = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx2.state === 'suspended') audioCtx2.resume();
+    var now = audioCtx2.currentTime;
+    var buf = audioCtx2.createBuffer(1, audioCtx2.sampleRate * .02, audioCtx2.sampleRate);
+    var d   = buf.getChannelData(0);
+    for (var i = 0; i < d.length; i++) d[i] = Math.random()*2-1;
+    var noise   = audioCtx2.createBufferSource(); noise.buffer = buf;
+    var filter  = audioCtx2.createBiquadFilter(); filter.type = 'bandpass'; filter.frequency.value = 1000;
+    var nGain   = audioCtx2.createGain();
+    nGain.gain.setValueAtTime(.3, now); nGain.gain.exponentialRampToValueAtTime(.001, now+.015);
+    noise.connect(filter); filter.connect(nGain); nGain.connect(audioCtx2.destination);
+    var osc     = audioCtx2.createOscillator(); osc.type = 'triangle';
+    osc.frequency.setValueAtTime(800, now); osc.frequency.exponentialRampToValueAtTime(100, now+.02);
+    var oGain   = audioCtx2.createGain();
+    oGain.gain.setValueAtTime(.5, now); oGain.gain.exponentialRampToValueAtTime(.001, now+.02);
+    osc.connect(oGain); oGain.connect(audioCtx2.destination);
+    noise.start(now); osc.start(now);
+    noise.stop(now+.02); osc.stop(now+.02);
+  } catch(e) {}
+}
+document.addEventListener('pointerdown', function(e) {
+  if (e.target.closest('.link-btn,.enter-btn,.back-btn')) playClick();
+});
+
+/* ══════════════════════════
+   PARTICLES
+══════════════════════════ */
+(function() {
+  var cv = document.getElementById('particles');
+  var cx = cv.getContext('2d');
+  var W, H, pts = [];
+  function resize() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  for (var i = 0; i < 45; i++) pts.push({
+    x: Math.random()*W, y: Math.random()*H,
+    vx: (Math.random()-.5)*.3, vy: (Math.random()-.5)*.3,
+    r: Math.random()*1.2+.3, pulse: Math.random()*Math.PI*2
+  });
+  function draw() {
+    cx.clearRect(0,0,W,H);
+    var t = Date.now()*.001;
+    pts.forEach(function(p) {
+      p.x += p.vx; p.y += p.vy;
+      if(p.x < -10) p.x = W+10; if(p.x > W+10) p.x = -10;
+      if(p.y < -10) p.y = H+10; if(p.y > H+10) p.y = -10;
+      var a = .05 + .05*Math.sin(t*1.2+p.pulse);
+      cx.beginPath(); cx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      cx.fillStyle = 'rgba(52,211,153,'+a+')'; cx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════
+   PAGE TRANSITIONS
+══════════════════════════ */
+var scroll = document.getElementById('pageScroll');
+
+function goLinks() {
+  var prof  = document.getElementById('page-profile');
+  var links = document.getElementById('page-links');
+  prof.style.transition = 'opacity .2s, transform .2s';
+  prof.style.opacity = '0'; prof.style.transform = 'translateY(-10px)';
+  setTimeout(function() {
+    prof.style.display = 'none';
+    links.style.opacity = '0'; links.style.transform = 'translateY(10px)';
+    links.style.display = 'flex'; links.classList.add('active');
+    scroll.scrollTop = 0;
+    requestAnimationFrame(function() {
+      links.style.transition = 'opacity .2s, transform .2s';
+      links.style.opacity = '1'; links.style.transform = 'translateY(0)';
+    });
+  }, 200);
+}
+
+function goProfile() {
+  var prof  = document.getElementById('page-profile');
+  var links = document.getElementById('page-links');
+  links.style.transition = 'opacity .2s, transform .2s';
+  links.style.opacity = '0'; links.style.transform = 'translateY(10px)';
+  setTimeout(function() {
+    links.style.display = 'none'; links.classList.remove('active');
+    prof.style.display = 'flex'; scroll.scrollTop = 0;
+    requestAnimationFrame(function() {
+      prof.style.transition = 'opacity .2s, transform .2s';
+      prof.style.opacity = '1'; prof.style.transform = 'translateY(0)';
+    });
+  }, 200);
+}
+
+/* ══════════════════════════
+   RIPPLE
+══════════════════════════ */
+document.addEventListener('pointerdown', function(e) {
+  var btn = e.target.closest('.link-btn,.enter-btn');
+  if (!btn) return;
+  var r = document.createElement('span'); r.className = 'ripple';
+  var rect = btn.getBoundingClientRect();
+  var size = Math.max(rect.width, rect.height);
+  r.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+(e.clientX-rect.left-size/2)+'px;top:'+(e.clientY-rect.top-size/2)+'px;';
+  btn.appendChild(r); setTimeout(function(){ r.remove(); }, 400);
+});
+
+/* ══════════════════════════
+   SCROLL TO TOP
+══════════════════════════ */
+var scrollTopBtn = document.getElementById('scrollTopBtn');
+scroll.addEventListener('scroll', function() {
+  scrollTopBtn.classList.toggle('show', scroll.scrollTop > 120);
+});
+function scrollToTop() { scroll.scrollTo({ top: 0, behavior: 'smooth' }); }
+</script>
+</body>
+</html>  height: 100%;
   object-fit: cover;
   position: absolute;
   top: 0;
