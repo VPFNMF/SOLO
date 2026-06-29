@@ -107,7 +107,7 @@ body {
 }
 
 /* ══════════════════════════════
-   PAGE: PROFILE
+    PAGE: PROFILE
 ══════════════════════════════ */
 #page-profile {
   display: flex;
@@ -442,6 +442,17 @@ body {
 }
 .dc:hover::after, .dc:active::after { opacity: 1; }
 
+/* TikAlert Donate */
+.ta .link-icon { background: rgba(255,75,75,.1); color: #FF4B4B; }
+.ta::after { background: #FF4B4B; box-shadow: 0 0 10px #FF4B4B, 0 0 20px #FF4B4B; }
+.ta:hover, .ta:active { 
+  background: rgba(255,75,75,.04); 
+  border-color: rgba(255,75,75,.6); 
+  box-shadow: 0 5px 20px rgba(255,75,75,.25), 0 0 35px rgba(255,75,75,.15), inset 0 0 10px rgba(255,75,75,.1); 
+  transform: translateY(-3px); 
+}
+.ta:hover::after, .ta:active::after { opacity: 1; }
+
 /* InstaPay / Donate */
 .dn .link-icon { background: rgba(255,215,0,.1); color: #FFD700; }
 .dn::after { background: #FFD700; box-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700; }
@@ -466,6 +477,7 @@ body {
 #page-links.active .link-btn:nth-of-type(3){ animation: dropIn .3s cubic-bezier(.25,1,.5,1) .16s both; }
 #page-links.active .link-btn:nth-of-type(4){ animation: dropIn .3s cubic-bezier(.25,1,.5,1) .19s both; }
 #page-links.active .link-btn:nth-of-type(5){ animation: dropIn .3s cubic-bezier(.25,1,.5,1) .22s both; }
+#page-links.active .link-btn:nth-of-type(6){ animation: dropIn .3s cubic-bezier(.25,1,.5,1) .25s both; }
 
 /* ripple */
 .ripple {
@@ -660,6 +672,15 @@ body {
       <i class="fas fa-arrow-right link-arrow"></i>
     </a>
 
+    <a class="link-btn ta" href="https://tikalert-eg.com/ADHAM_" target="_blank" rel="noopener">
+      <div class="link-icon"><i class="fas fa-fire-alt"></i></div>
+      <div class="link-label">
+        <div>Donation</div>
+        <div class="link-meta">Support via TikAlert</div>
+      </div>
+      <i class="fas fa-arrow-right link-arrow"></i>
+    </a>
+
     <a class="link-btn dn" href="https://ipn.eg/S/adhamsolo90/instapay/50rIUM" target="_blank" rel="noopener">
       <div class="link-icon"><i class="fas fa-hand-holding-dollar"></i></div>
       <div class="link-label">
@@ -670,7 +691,7 @@ body {
     </a>
   </div>
 
-  <div class="footer">Made with ❤️ · solo_39</div>
+  <div class="footer">Made with · moonly</div>
 </div><script>
 /* ══════════════════════════
    VISITOR COUNTER (localStorage)
